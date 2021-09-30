@@ -8,9 +8,9 @@ stages:
 
 syntax:
   stage: test
-  image: php:8-alpine
+  image: php:8
   before_script:
-    - apk add wget
+    - apt-get -y install wget
     - wget https://getcomposer.org/download/latest-stable/composer.phar
     - chmod +x composer.phar
     - mv composer.phar /usr/bin/composer
@@ -22,9 +22,9 @@ syntax:
 
 phpunit:
   stage: test
-  image: php:8-alpine
+  image: php:8
   before_script:
-    - apk add wget
+    - apt-get -y install wget
     - wget https://getcomposer.org/download/latest-stable/composer.phar
     - chmod +x composer.phar
     - mv composer.phar /usr/bin/composer
