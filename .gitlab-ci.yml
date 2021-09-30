@@ -11,12 +11,12 @@ syntax:
   image: php:8
   before_script:
     - apt-get update
-    - apt-get -y install wget
+    - apt-get -y install wget unzip
     - wget https://getcomposer.org/download/latest-stable/composer.phar
     - chmod +x composer.phar
     - mv composer.phar /usr/bin/composer
     - pecl install xdebug
-    - docker-php-ext-enable xdebug
+    - docker-php-ext-enable xdebug zip
     - composer install
   script: 
     - composer syntax
@@ -26,12 +26,12 @@ phpunit:
   image: php:8
   before_script:
     - apt-get update
-    - apt-get -y install wget
+    - apt-get -y install wget unzip
     - wget https://getcomposer.org/download/latest-stable/composer.phar
     - chmod +x composer.phar
     - mv composer.phar /usr/bin/composer
     - pecl install xdebug
-    - docker-php-ext-enable xdebug
+    - docker-php-ext-enable xdebug zip
     - composer install
   script: 
     - composer phpunit
