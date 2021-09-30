@@ -17,6 +17,9 @@
         <include>
             <directory suffix=".php">./src</directory>
         </include>
+        <report>
+            <clover outputFile="coverage.out"/>
+        </report>
     </coverage>
     <php>
         <server name="CACHE_DRIVER" value="array"/>
