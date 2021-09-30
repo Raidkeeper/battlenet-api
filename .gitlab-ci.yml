@@ -10,6 +10,9 @@ syntax:
   stage: test
   image: php:8
   before_script:
+    - wget https://getcomposer.org/download/latest-stable/composer.phar
+    - chmod +x composer.phar
+    - mv composer.phar /usr/bin/composer
     - pecl install xdebug
     - docker-php-ext-enable xdebug
     - composer install
@@ -20,6 +23,9 @@ phpunit:
   stage: test
   image: php:8
   before_script:
+    - wget https://getcomposer.org/download/latest-stable/composer.phar
+    - chmod +x composer.phar
+    - mv composer.phar /usr/bin/composer
     - pecl install xdebug
     - docker-php-ext-enable xdebug
     - composer install
