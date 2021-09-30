@@ -10,6 +10,7 @@ syntax:
   stage: test
   image: php:8
   before_script:
+    - apt-get update
     - apt-get -y install wget
     - wget https://getcomposer.org/download/latest-stable/composer.phar
     - chmod +x composer.phar
@@ -24,6 +25,7 @@ phpunit:
   stage: test
   image: php:8
   before_script:
+    - apt-get update
     - apt-get -y install wget
     - wget https://getcomposer.org/download/latest-stable/composer.phar
     - chmod +x composer.phar
