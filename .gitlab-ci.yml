@@ -5,3 +5,23 @@ include:
 
 stages:
   - test
+
+syntax:
+  stage: test
+  image: php:8
+  before_script:
+    - pecl install xdebug
+    - docker-php-ext-enable xdebug
+    - composer install
+  script: 
+    - composer syntax
+
+phpunit:
+  stage: test
+  image: php:8
+  before_script:
+    - pecl install xdebug
+    - docker-php-ext-enable xdebug
+    - composer install
+  script: 
+    - composer phpunit
