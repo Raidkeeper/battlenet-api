@@ -40,7 +40,7 @@
         "syntax": [
             "parallel-lint . --exclude vendor",
             "phpcs src --standard=psr2 -sp",
-            "phpstan analyse src",
+            "phpstan analyse src"
         ]
     }
 }
