@@ -34,11 +34,13 @@
         "barryvdh/laravel-ide-helper": "*"
     },
     "scripts": {
-        "test": [
+        "phpunit": [
+            "phpunit"
+        ],
+        "syntax": [
             "parallel-lint . --exclude vendor",
             "phpcs src --standard=psr2 -sp",
             "phpstan analyse src",
-            "phpunit"
         ]
     }
 }
