@@ -11,16 +11,12 @@ matrix:
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
   - composer phpunit
 
 after_success:
-  - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
-  - curl -Os https://uploader.codecov.io/latest/linux/codecov
-  - curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-  - curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-  - gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
-  - shasum -a 256 -c codecov.SHA256SUM
-  - chmod +x codecov
-  - ./codecov
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
