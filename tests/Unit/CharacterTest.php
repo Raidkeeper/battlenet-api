@@ -30,6 +30,17 @@ final class CharacterTest extends TestCase
         $this->assertEquals($data->character_class, $raw->character_class->name->en_US);
     }
 
+    public function testCharacterProfileAlternateLocale(): void
+    {
+        $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
+        $client->setLocale('de_DE');
+        $character = $client->loadCharacter('raidkeeper', 'sargeras');
+        $this->assertInstanceOf(Character::class, $character);
+
+        $data = $character->getProfile();
+        $this->assertEquals($data->character_class, 'Krieger'); // German response for Warrior
+    }
+
     public function testNotFoundCharacterProfile(): void
     {
         $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
