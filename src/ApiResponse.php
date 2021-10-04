@@ -16,20 +16,21 @@ class ApiResponse
     public function __get(string $name): mixed
     {
         if (isset($this->data->$name)) {
-            $found = $this->data->$name;
-            if (is_object($found)) {
-                if (isset($found->name)) {
-                    return is_string($found->name) ? $found->name : $this->getLocaleData($found);
-                } elseif (isset($found->href)) {
-                    return $found->href;
-                } else {
-                    return $found;
-                }
-            } else {
-                return $this->data->$name;
+            $data = $this->data->$name;
+            if (is_object($data)) {
+                return $this->getFromObject($data);
             }
+            return $this->data->$name;
         }
         return new \Error('Could not smartly return '.$name.' from api data. Try getRaw() instead.', 404);
+    }
+
+    public function getFromObject(mixed $data): mixed
+    {
+        if (isset($data->name)) {
+            return is_string($data->name) ? $data->name : $this->getLocaleData($data);
+        }
+        return isset($data->href) ? $data->href : $data;
     }
 
     public function getRaw(string $name): mixed
