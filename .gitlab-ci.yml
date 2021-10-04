@@ -37,3 +37,4 @@ phpunit:
     - composer install
   script: 
     - composer phpunit
+    - bash <(curl -s https://codecov.io/bash)
