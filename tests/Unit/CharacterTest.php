@@ -65,4 +65,15 @@ final class CharacterTest extends TestCase
         $this->assertObjectHasAttribute('item', $data->equipped_items[0]);
         $this->assertObjectHasAttribute('level', $data->equipped_items[0]);
     }
+
+    public function testCharacterKeystones(): void
+    {
+        $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
+        $character = $client->loadCharacter('raidkeeper', 'sargeras');
+        $this->assertInstanceOf(Character::class, $character);
+
+        $data = $character->getKeystones();
+        $this->assertInstanceOf(ApiResponse::class, $data);
+        $this->assertIsInt($data->current_period->period->id);
+    }
 }

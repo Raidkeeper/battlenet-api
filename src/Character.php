@@ -30,7 +30,7 @@ class Character
         return $this->client->fromEndpoint('profile', $this->apiBase.'/equipment')->get();
     }
 
-    public function getKeystoneProfile(): \Error|ApiResponse
+    public function getKeystones(): \Error|ApiResponse
     {
         return $this->client->fromEndpoint('profile', $this->apiBase.'/mythic-keystone-profile')->get();
     }
