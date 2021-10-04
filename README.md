@@ -1,6 +1,6 @@
-# Battlenet WoW API Client
+# Battlenet WoW API Client 
 
-[![Build Status](https://app.travis-ci.com/Raidkeeper/battlenet-api.svg?branch=main)](https://app.travis-ci.com/Raidkeeper/battlenet-api) [![Maintainability](https://api.codeclimate.com/v1/badges/ed6fcf6bd55309d13082/maintainability)](https://codeclimate.com/github/Raidkeeper/battlenet-api/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ed6fcf6bd55309d13082/test_coverage)](https://codeclimate.com/github/Raidkeeper/battlenet-api/test_coverage)
+![Build Status](https://img.shields.io/travis/com/raidkeeper/battlenet-api?style=for-the-badge) ![Code Climate coverage](https://img.shields.io/codeclimate/coverage/Raidkeeper/battlenet-api?style=for-the-badge) ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Raidkeeper/battlenet-api?style=for-the-badge)
 
 This is an API client for Blizzard's World of Warcraft game, primarily used by [Raidkeeper](https://raidkeeper.com) but available for use with any application.
 
