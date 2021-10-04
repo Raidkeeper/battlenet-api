@@ -9,6 +9,7 @@ class Client
     protected Token  $token;
     protected string $clientId;
     protected string $clientSecret;
+    protected string $locale = 'en_US';
     public string $url;
 
     /**
@@ -37,7 +38,7 @@ class Client
         $this->token = new Token($this->region, $this->clientId, $this->clientSecret);
     }
 
-    public function get(): Error|string
+    public function get(): Error|\stdClass
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $this->url);
@@ -52,9 +53,27 @@ class Client
 
         if (! is_string($response)) {
             return new Error('API call has returned a non-valid response.', $code);
-        } else {
-            return json_decode($response);
+	} else {
+	    $json = json_decode($response);
+	    return isset($json->code) ? new Error($json->detail, $json->code) : $json;
         }
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->locale = $locale;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function slugify(string $name): string
+    {
+        $name = str_replace(' ', '-', $name);
+        $name = str_replace("'", '', $name);
+        return strtolower($name);
     }
 
     /**
@@ -67,12 +86,13 @@ class Client
         $this->addClientTokenHeader();
     }
 
-    public function fromEndpoint(string $namespace, string $endpoint): void
+    public function fromEndpoint(string $namespace, string $endpoint): Client
     {
         $this->namespace = $namespace;
         $this->buildUrl($endpoint);
         $this->addBattlenetHeader();
         $this->addClientTokenHeader();
+        return $this;
     }
 
     public function fromOAuthEndpoint(string $namespace, string $endpoint): void
@@ -83,7 +103,7 @@ class Client
         $this->addOAuthHeader();
     }
 
-    public function buildUrl(string $endpoint): void
+    protected function buildUrl(string $endpoint): void
     {
         $this->url = 'https://'.$this->region.'.api.blizzard.com/'.$this->namespace.'/'.$endpoint;
     }
@@ -92,22 +112,22 @@ class Client
      * Header client methods
      */
 
-    public function addBattlenetHeader(): void
+    protected function addBattlenetHeader(): void
     {
         $this->headers[] = 'Battlenet-Namespace: '.$this->namespace.'-'.$this->region;
     }
 
-    public function addClientTokenHeader(): void
+    protected function addClientTokenHeader(): void
     {
         $this->addTokenHeader($this->token->getToken());
     }
 
-    public function addOAuthHeader(): void
+    protected function addOAuthHeader(): void
     {
         $this->addTokenHeader($this->oauthToken);
     }
 
-    public function addTokenHeader(string $tokenString): void
+    protected function addTokenHeader(string $tokenString): void
     {
         $this->headers[] = 'Authorization: Bearer '.$tokenString;
     }
@@ -115,4 +135,8 @@ class Client
     /**
      * Child accessor methods
      */
+    public function loadCharacter(string $name, string $realm): Character
+    {
+        return new Character($name, $this->slugify($realm), $this);
+    }
 }
