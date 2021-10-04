@@ -46,7 +46,6 @@ class Token
         $curl = Client::curl(
             $url,
             $headers,
-            true,
             ['grant_type'=>'client_credentials'],
             $this->clientId.':'.$this->clientSecret
         );

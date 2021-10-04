@@ -67,15 +67,13 @@ class Client
     /**
      * @param string $url
      * @param Array<string> $hdrs
-     * @param bool $post
-     * @param Array<string> $fields
+     * @param Array<string> $postFields
      * @param string $usrPwd
      */
     public static function curl(
         string $url,
         array $hdrs,
-        bool $post = false,
-        array $fields = [],
+        array $postFields = [],
         string $usrPwd = ''
     ): \CurlHandle {
         $curl = curl_init();
@@ -84,9 +82,9 @@ class Client
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        if ($post) {
+        if (!empty($postFields)) {
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
         }
         if ($usrPwd != '') {
             curl_setopt($curl, CURLOPT_USERPWD, $usrPwd);
