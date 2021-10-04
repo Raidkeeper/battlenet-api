@@ -53,9 +53,9 @@ class Client
 
         if (! is_string($response)) {
             return new Error('API call has returned a non-valid response.', $code);
-	} else {
-	    $json = json_decode($response);
-	    return isset($json->code) ? new Error($json->detail, $json->code) : $json;
+        } else {
+            $json = json_decode($response);
+            return isset($json->code) && isset($json->detail) ? new Error($json->detail, $json->code) : $json;
         }
     }
 
