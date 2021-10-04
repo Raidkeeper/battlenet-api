@@ -3,10 +3,7 @@ language: php
 matrix:
   include:
     - php: 8.0
-    - php: nightly
   fast_finish: true
-  allow_failures:
-    - php: nightly
 
 before_script:
   - travis_retry composer self-update
@@ -19,4 +16,4 @@ script:
   - composer phpunit
 
 after_success:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT
