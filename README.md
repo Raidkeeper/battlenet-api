@@ -1,8 +1,6 @@
-# Blizzard WoW API Client
+# Battlenet WoW API Client
 
-This is an API client for Blizzard's World of Warcraft game, primarily used by Raidkeeper but available for use with any application.
-
-
+This is an API client for Blizzard's World of Warcraft game, primarily used by [Raidkeeper](https://raidkeeper.com) but available for use with any application.
 
 ## Installation
 You should install this using composer:
