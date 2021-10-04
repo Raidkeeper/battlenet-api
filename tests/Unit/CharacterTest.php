@@ -3,9 +3,9 @@
 namespace Raidkeeper\Api\Battlenet\Tests\Unit;
 
 use Orchestra\Testbench\TestCase;
+use Raidkeeper\Api\Battlenet\ApiResponse;
 use Raidkeeper\Api\Battlenet\Character;
 use Raidkeeper\Api\Battlenet\Client;
-use Raidkeeper\Api\Battlenet\Error;
 
 final class CharacterTest extends TestCase
 {
@@ -15,13 +15,15 @@ final class CharacterTest extends TestCase
         $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
         $character = $client->loadCharacter('raidkeeper', 'sargeras');
         $this->assertInstanceOf(Character::class, $character);
-        $data = $character->getProfile();
 
+        $data = $character->getProfile();
         $this->assertEquals($data->name, 'Raidkeeper');
         $this->assertEquals($data->gender, 'Male');
         $this->assertEquals($data->faction, 'Alliance');
         $this->assertEquals($data->race, 'Dark Iron Dwarf');
         $this->assertEquals($data->character_class, 'Warrior');
+        $this->assertInstanceOf(\Error::class, $data->guild);
+        $this->assertInstanceOf(\Error::class, $data->covenant_progress);
     }
 
     public function testNotFoundCharacterProfile(): void
@@ -29,9 +31,23 @@ final class CharacterTest extends TestCase
         $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
         $character = $client->loadCharacter('foobarbazfizzbuzzinvalidcharactername', 'sargeras');
         $this->assertInstanceOf(Character::class, $character);
-	$data = $character->getProfile();
-        $this->assertInstanceOf(Error::class, $data);
+	    
+        $data = $character->getProfile();
+        $this->assertInstanceOf(\Error::class, $data);
         $this->assertEquals($data->getCode(), 404);
         $this->assertEquals($data->getMessage(), 'Not Found');
+    }
+
+    public function testCharacterEquipment(): void
+    {
+        $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
+        $character = $client->loadCharacter('raidkeeper', 'sargeras');
+        $this->assertInstanceOf(Character::class, $character);
+
+        $data = $character->getEquipment();
+        $this->assertInstanceOf(ApiResponse::class, $data);
+        $this->assertIsArray($data->equipped_items);
+        $this->assertObjectHasAttribute('item', $data->equipped_items[0]);
+        $this->assertObjectHasAttribute('level', $data->equipped_items[0]);
     }
 }

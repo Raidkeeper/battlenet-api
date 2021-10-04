@@ -20,21 +20,18 @@ class Character
         $this->apiBase = 'wow/character/'.$this->realm.'/'.urlencode(strtolower($this->name));
     }
 
-    public function getProfile(): Error|ApiResponse
+    public function getProfile(): \Error|ApiResponse
     {
-        $response = $this->client->fromEndpoint('profile', $this->apiBase)->get();
-        if ($response instanceof Error) {
-            return $response;
-        }
-        return new ApiResponse($response, $this->client->getLocale());
+        return $this->client->fromEndpoint('profile', $this->apiBase)->get();
     }
 
-    public function getEquipment(): Error|ApiResponse
+    public function getEquipment(): \Error|ApiResponse
     {
-        $response = $this->client->fromEndpoint('profile', $this->apiBase.'/equipment')->get();
-        if ($response instanceof Error) {
-            return $response;
-        }
-        return new ApiResponse($response, $this->client->getLocale());
+        return $this->client->fromEndpoint('profile', $this->apiBase.'/equipment')->get();
+    }
+
+    public function getKeystoneProfile(): \Error|ApiResponse
+    {
+        return $this->client->fromEndpoint('profile', $this->apiBase.'/mythic-keystone-profile')->get();
     }
 }

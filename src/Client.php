@@ -2,6 +2,8 @@
 
 namespace Raidkeeper\Api\Battlenet;
 
+use Illuminate\Support\Facades\Cache;
+
 class Client
 {
     protected string $region;
@@ -38,25 +40,58 @@ class Client
         $this->token = new Token($this->region, $this->clientId, $this->clientSecret);
     }
 
-    public function get(): Error|\stdClass
+    public function get(): \Error|ApiResponse
     {
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $this->url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $cache = Cache::get('data_'.$this->url);
+        if ($cache != null) {
+            return $cache;
+        }
 
+        $curl     = static::curl($this->url, $this->headers);
         $response = curl_exec($curl);
         $code     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
         if (! is_string($response)) {
-            return new Error('API call has returned a non-valid response.', $code);
+            return new \Error('API call has returned a non-valid response.', $code);
         } else {
             $json = json_decode($response);
-            return isset($json->code) && isset($json->detail) ? new Error($json->detail, $json->code) : $json;
+            if (isset($json->code) && isset($json->detail)) {
+                return new \Error($json->detail, $json->code);
+            }
+            Cache::put('data_'.$this->url, $json, now()->addMinutes(50));
+            return new ApiResponse($json, $this->getLocale());
         }
+    }
+
+    /**
+     * @param string $url
+     * @param Array<string> $hdrs
+     * @param bool $post
+     * @param Array<string> $fields
+     * @param string $usrPwd
+     */
+    public static function curl(
+        string $url,
+        array $hdrs,
+        bool $post = false,
+        array $fields = [],
+        string $usrPwd = ''
+    ): \CurlHandle {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $hdrs);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        if ($post) {
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+        }
+        if ($usrPwd != '') {
+            curl_setopt($curl, CURLOPT_USERPWD, $usrPwd);
+        }
+        return $curl;
     }
 
     public function setLocale(string $locale): void

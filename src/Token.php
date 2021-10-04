@@ -13,7 +13,7 @@ class Token
     protected string $tokenExpiration;
 
     /**
-     * @var Error|null
+     * @var \Error|null
      */
     protected $error;
 
@@ -43,24 +43,17 @@ class Token
             'User-Agent: RaidKeeper <gitlab.com/raidkeeper/raidkeeper>',
         ];
 
-        $ch = curl_init();
-        curl_setopt_array(
-            $ch,
-            array(
-                CURLOPT_URL            => $url,
-                CURLOPT_HTTPHEADER     => $headers,
-                CURLOPT_POST           => 1,
-                CURLOPT_POSTFIELDS     => ['grant_type'=>'client_credentials'],
-                CURLOPT_USERPWD        => $this->clientId . ":" . $this->clientSecret,
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_SSL_VERIFYPEER => 0,
-            ),
+        $curl = Client::curl(
+            $url,
+            $headers,
+            true,
+            ['grant_type'=>'client_credentials'],
+            $this->clientId.':'.$this->clientSecret
         );
 
-        $response = curl_exec($ch);
-        $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $response = curl_exec($curl);
+        $status   = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
         
         if ($status == 200 && is_string($response)) {
             $data = json_decode($response);
@@ -70,7 +63,7 @@ class Token
             Cache::put('rk:battlenet:'.$this->region.':token', $token, now()->addHours(23));
             $this->error = null;
         } else {
-            $this->error = new Error('Unable to refresh client access token', $status);
+            $this->error = new \Error('Unable to refresh client access token', $status);
         }
     }
 
@@ -79,7 +72,7 @@ class Token
         return $this->accessToken;
     }
 
-    public function getError(): Error|null
+    public function getError(): \Error|null
     {
         return $this->error;
     }

@@ -13,21 +13,23 @@ class ApiResponse
         $this->locale = $locale;
     }
 
-    public function __get(string $name): string|null
+    public function __get(string $name): mixed
     {
         if (isset($this->data->$name)) {
             $found = $this->data->$name;
             if (is_object($found)) {
                 if (isset($found->name)) {
-                    return $this->getLocaleData($found);
+                    return is_string($found->name) ? $found->name : $this->getLocaleData($found);
                 } elseif (isset($found->href)) {
                     return $found->href;
+                } else {
+                    return $found;
                 }
             } else {
                 return $this->data->$name;
             }
         }
-        throw new Error('Could not smartly return '.$name.' from api data. Try getRaw() instead.', 404);
+        return new \Error('Could not smartly return '.$name.' from api data. Try getRaw() instead.', 404);
     }
 
     public function getRaw(string $name): mixed
@@ -35,7 +37,7 @@ class ApiResponse
         return $this->data->$name;
     }
 
-    protected function getLocaleData(object $object): string|null
+    public function getLocaleData(object $object): string|null
     {
         $locale = $this->locale;
         if (isset($object->name)) {
