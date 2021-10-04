@@ -52,16 +52,22 @@ class Client
         $code     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
+        return $this->parseResponse($response, $code);
+    }
+
+    public function parseResponse(mixed $response, int $code): \Error|ApiResponse
+    {
         if (! is_string($response)) {
-            return new \Error('API call has returned a non-valid response.', $code);
-        } else {
-            $json = json_decode($response);
-            if (isset($json->code) && isset($json->detail)) {
-                return new \Error($json->detail, $json->code);
-            }
-            Cache::put('data_'.$this->url, $json, now()->addMinutes(50));
-            return new ApiResponse($json, $this->getLocale());
+            return new \Error('Api call has returned a non-valid response.', $code);
         }
+
+        $json = json_decode($response);
+        if (isset($json->code) && isset($json->detail)) {
+            return new \Error($json->detail, $json->code);
+        }
+
+        Cache::put('data_'.$this->url, $json, now()->addMinutes(55));
+        return new ApiResponse($json, $this->getLocale());
     }
 
     /**
