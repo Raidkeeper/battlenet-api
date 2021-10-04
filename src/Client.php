@@ -44,7 +44,7 @@ class Client
     {
         $cache = Cache::get('data_'.$this->url);
         if ($cache != null) {
-            return $cache;
+            return new ApiResponse($cache, $this->getLocale());
         }
 
         $curl     = static::curl($this->url, $this->headers);

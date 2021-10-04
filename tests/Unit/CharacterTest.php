@@ -76,4 +76,19 @@ final class CharacterTest extends TestCase
         $this->assertInstanceOf(ApiResponse::class, $data);
         $this->assertIsInt($data->current_period->period->id);
     }
+
+    public function testCharacterCache(): void
+    {
+        $client = new Client('us', getenv('RK_TEST_BATTLENET_CLIENT_ID'), getenv('RK_TEST_BATTLENET_CLIENT_SECRET'));
+        $character = $client->loadCharacter('raidkeeper', 'sargeras');
+        $this->assertInstanceOf(Character::class, $character);
+
+        $data = $character->getProfile();
+        $this->assertInstanceOf(ApiResponse::class, $data);
+        $this->assertEquals($data->name, 'Raidkeeper');
+        
+        $cached = $character->getProfile();
+        $this->assertInstanceOf(ApiResponse::class, $cached);
+        $this->assertEquals($cached->name, 'Raidkeeper');
+    }
 }
