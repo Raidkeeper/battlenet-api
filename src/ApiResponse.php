@@ -33,9 +33,9 @@ class ApiResponse
         return isset($data->href) ? $data->href : $data;
     }
 
-    public function getRaw(string $name): mixed
+    public function getRaw(): mixed
     {
-        return $this->data->$name;
+        return $this->data;
     }
 
     public function getLocaleData(object $object): string|null

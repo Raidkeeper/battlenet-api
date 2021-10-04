@@ -25,6 +25,9 @@ final class CharacterTest extends TestCase
         $this->assertInstanceOf(\Error::class, $data->guild);
         $this->assertInstanceOf(\Error::class, $data->covenant_progress);
         $this->assertEquals('https://us.api.blizzard.com/profile/wow/character/sargeras/raidkeeper/equipment?namespace=profile-us', $data->equipment);
+
+        $raw = $data->getRaw();
+        $this->assertEquals($data->character_class, $raw->character_class->name->en_US);
     }
 
     public function testNotFoundCharacterProfile(): void
