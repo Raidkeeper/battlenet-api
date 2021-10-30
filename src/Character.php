@@ -17,7 +17,7 @@ class Character
         $this->realm  = $realm;
         $this->client = $client;
 
-        $this->apiBase = 'wow/character/'.$this->realm.'/'.urlencode(strtolower($this->name));
+        $this->apiBase = 'wow/character/'.$this->realm.'/'.urlencode(mb_strtolower($this->name, 'UTF-8'));
     }
 
     public function getProfile(): \Error|ApiResponse

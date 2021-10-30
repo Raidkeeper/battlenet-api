@@ -112,7 +112,7 @@ class Client
     {
         $name = str_replace(' ', '-', $name);
         $name = str_replace("'", '', $name);
-        return strtolower($name);
+        return mb_strtolower($name, 'UTF-8');
     }
 
     /**
