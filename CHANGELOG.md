@@ -6,9 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.2] - 2021-10-29
+### Fixed
+- API calls now correctly support UTF-8 character names. Previously these were mangling on `strtolower` calls.
+
 ## [0.0.1] - 2021-10-04
 ### Added
 - Initial project release
 
-[Unreleased]: https://github.com/raidkeeper/battlenet-api/compare/0.0.1...HEAD
+[Unreleased]: https://github.com/raidkeeper/battlenet-api/compare/0.0.2...HEAD
+[0.0.2]: https://github.com/raidkeeper/battlenet-api/compare/0.0.1...0.0.2
 [0.0.1]: https://github.com/raidkeeper/battlenet-api/releases/tag/0.0.1
