@@ -38,6 +38,9 @@ class Client
 
         // Adding Client token to object
         $this->token = new Token($this->region, $this->clientId, $this->clientSecret);
+        if ($this->token->hasError()) {
+            throw $this->token->getError();
+        }
     }
 
     public function get(): \Error|ApiResponse
@@ -64,6 +67,10 @@ class Client
         $json = json_decode($response);
         if (isset($json->code) && isset($json->detail)) {
             return new \Error($json->detail, $json->code);
+        }
+
+        if($json === null) {
+            return new \Error('Api call has returned unparseable JSON: '.$response, $code );
         }
 
         Cache::put('data_'.$this->url, $json, now()->addMinutes(55));

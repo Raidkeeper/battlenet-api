@@ -32,8 +32,11 @@ class Token
         if ($cache == null || $cache <= (time() - 60)) {
             $this->handshake();
         }
-        $this->tokenExpiration = Cache::get('rk:battlenet:'.$this->region.':token:expiration');
-        $this->accessToken     = Cache::get('rk:battlenet:'.$this->region.':token');
+
+        if (! $this->hasError()) {
+            $this->tokenExpiration = Cache::get('rk:battlenet:'.$this->region.':token:expiration');
+            $this->accessToken     = Cache::get('rk:battlenet:'.$this->region.':token');
+        }
     }
 
     protected function handshake(): void
